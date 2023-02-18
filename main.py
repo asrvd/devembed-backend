@@ -51,14 +51,19 @@ def get_dev_stats(user: str):
 
 
 @app.route("/api", methods=["GET"])
-@cache.cached(timeout=300)
 def api():
     user = request.args.get("user")
     try:
         if user is None:
             return jsonify({"error": "No user provided"}), 400
 
-        return jsonify(get_dev_stats(user)), 200
+        cached = cache.get(user)
+        if cached is not None:
+            return jsonify(cached)
+
+        stats = get_dev_stats(user)
+        cache.set(user, stats)
+        return jsonify(stats)
     except Exception as e:
         return jsonify({"error": "Something went wrong!"}), 500
 
