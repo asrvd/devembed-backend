@@ -1,7 +1,17 @@
 import requests
 from flask import Flask, request, jsonify
+from flask_caching import Cache
+
+config = {
+    "DEBUG": True,
+    "CACHE_TYPE": "simple",
+    "CACHE_DEFAULT_TIMEOUT": 300,
+}
+
 
 app = Flask(__name__)
+app.config.from_mapping(config)
+cache = Cache(app)
 
 
 def get_profile(user: str):
@@ -41,6 +51,7 @@ def get_dev_stats(user: str):
 
 
 @app.route("/api", methods=["GET"])
+@cache.cached(timeout=300)
 def api():
     user = request.args.get("user")
     try:
