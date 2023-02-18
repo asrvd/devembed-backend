@@ -59,11 +59,11 @@ def api():
 
         cached = cache.get(user)
         if cached is not None:
-            return jsonify(cached)
+            return jsonify(cached), 200
 
         stats = get_dev_stats(user)
         cache.set(user, stats)
-        return jsonify(stats)
+        return jsonify(stats), 200
     except Exception as e:
         return jsonify({"error": "Something went wrong!"}), 500
 
