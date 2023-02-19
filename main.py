@@ -42,6 +42,7 @@ def get_dev_stats(user: str):
 
     return {
         "name": profile["name"],
+        "summary": profile["summary"],
         "username": profile["username"],
         "twitter": profile["twitter_username"],
         "avatar": profile["profile_image"],
